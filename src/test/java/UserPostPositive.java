@@ -3,6 +3,10 @@ import io.restassured.http.Header;
 import models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.hasEntry;
 
@@ -41,7 +45,28 @@ public class UserPostPositive {
                 .then().log().all()
                 .statusCode(201);
     }
+    @Test
+    void postHeadersMap() {
+        User user = User.builder()
+                .name("Anna Rain")
+                .email("testanna2@mail.ru")
+                .status("active")
+                .gender("female")
+                .build();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer 85c048a440d02dfb525a8665af6503792e0408f3a277e464ace91f182691648e");
+        headers.put("Content-Type", "application/json");
+        headers.put("Accept", "application/json");
 
+        RestAssured
+                .given().log().all()
+                .body(user)
+                .headers(headers)
+                .when()
+                .post(USERS_URL)
+                .then().log().all()
+                .statusCode(201);
+    }
     @Test
     void postRequestObject() {
         User user = User.builder()
