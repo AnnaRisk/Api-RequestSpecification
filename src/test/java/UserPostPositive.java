@@ -24,9 +24,17 @@ public class UserPostPositive {
 
     @Test
     void postHeaderObject() {
+        User user = User.builder()
+                .name("Anna Rain")
+                .email("testanna2@mail.ru")
+                .status("active")
+                .gender("female")
+                .build();
+
         Header header = new Header("Authorization", "Bearer 9250be4657a5e41dd29064afb6f793d064a640b2165a98cdf5e3ee746ff50e33");
         RestAssured
                 .given().log().all()
+                .body(user)
                 .header(header)
                 .when()
                 .post(USERS_URL)
@@ -99,7 +107,7 @@ public class UserPostPositive {
         String json = "{" +
                 "\"name\": \"Anna Rain\"," +
                 "\"post_id\"\": \"100\"," +
-                "\"email\": \"testanna@mail.ru\"," +
+                "\"email\": \"testanna2@mail.ru\"," +
                 "\"body\": \"Facilis sequi laudantium. Eos nobis optio\"" +
                 "}";
 
@@ -111,8 +119,8 @@ public class UserPostPositive {
                 .post(COMMENTS_URL)
                 .then().log().all()
                 .statusCode(200)
-                .body("$", everyItem(hasEntry("email", "testanna@mail.ru")))
-                .body("$", everyItem(hasEntry("name", "AnnaRain")));
+                .body("$", everyItem(hasEntry("email", "testanna2@mail.ru")))
+                .body("$", everyItem(hasEntry("name", "Anna Rain")));
     }
 
 
