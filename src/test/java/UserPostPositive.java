@@ -1,9 +1,11 @@
 import io.restassured.RestAssured;
 import io.restassured.http.Header;
+import io.restassured.module.jsv.JsonSchemaValidator;
 import models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -148,6 +150,36 @@ public class UserPostPositive {
                 .body("$", everyItem(hasEntry("name", "Anna Rain")));
     }
 
+    @Test
+    void schemaValidation() {
+        User user = User.builder()
+                .name("Anna Rain")
+                .email("annatest2" + new Date().getTime() + "@mail.ru")
+                .status("active")
+                .gender("female")
+                .build();
 
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer 9250be4657a5e41dd29064afb6f793d064a640b2165a98cdf5e3ee746ff50e33")
+                .header("Content-Type", "application/json")
+                .body(user)
+                .when()
+                .post(USERS_URL)
+                .then().log().all()
+                .statusCode(201)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/user.json"));
+    }
+
+    @Test
+    void schemaValidationArray() {
+        RestAssured
+                .given().log().all()
+                .when()
+                .get(USERS_URL)
+                .then().log().all()
+                .statusCode(200)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/users.json"));
+    }
 }
 
