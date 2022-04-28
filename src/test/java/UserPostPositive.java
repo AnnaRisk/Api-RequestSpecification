@@ -57,7 +57,7 @@ public class UserPostPositive {
     void postHeader() {
         User user = User.builder()
                 .name("Anna Rain")
-                .email("testanna@mail.ru")
+                .email("testanna2@mail.ru")
                 .status("active")
                 .gender("female")
                 .build();
@@ -77,20 +77,21 @@ public class UserPostPositive {
     void postAuthorization() {
         User user = User.builder()
                 .name("Anna Rain")
-                .email("testanna@mail.ru")
+                .email("testanna2@mail.ru")
                 .status("active")
                 .gender("female")
                 .build();
 
         RestAssured
                 .given().log().all()
-                .auth().oauth2("<token>")
+                .auth().oauth2("Bearer 9250be4657a5e41dd29064afb6f793d064a640b2165a98cdf5e3ee746ff50e33")
+                .body(user)
                 .when()
                 .post(USERS_URL)
                 .then().log().all()
                 .statusCode(200)
-                .body("$", everyItem(hasEntry("status", "inactive")))
-                .body("$", everyItem(hasEntry("gender", "male")));
+                .body("$", everyItem(hasEntry("status", "active")))
+                .body("$", everyItem(hasEntry("gender", "female")));
     }
 
     @Test
